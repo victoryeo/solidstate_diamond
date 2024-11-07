@@ -54,12 +54,12 @@ contract CounterTest is Test {
         console.logBytes4(facets[1].selectors[0]);
 
         // call setNumber at selectors[1]
-        (bool ok1, bytes memory res1) = address(facets[0].target).call(abi.encodePacked(facets[1].selectors[1], uint256(1)));
+        (bool ok1, bytes memory res1) = address(facets[1].target).call(abi.encodeWithSelector(facets[1].selectors[1], uint256(2)));
         console.logBytes(res1);
         assertEq(ok1, true);
         
         // call getNumber at selectors[0]
-        (bool ok, bytes memory res) = address(facets[0].target).call(abi.encodePacked(facets[1].selectors[0])); 
+        (bool ok, bytes memory res) = address(facets[1].target).call(abi.encodeWithSelector(facets[1].selectors[0])); 
         console.logBytes(res);
         assertEq(ok, true);
     }
