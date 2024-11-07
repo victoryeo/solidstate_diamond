@@ -1,14 +1,14 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
+// SPDX-License-Identifier: MIT
 
-contract Counter {
-    uint256 public number;
+pragma solidity ^0.8.26;
 
-    function setNumber(uint256 newNumber) public {
-        number = newNumber;
-    }
+import {SolidStateDiamond} from "solidstate-solidity/proxy/diamond/SolidStateDiamond.sol";
 
-    function increment() public {
-        number++;
-    }
-}
+/**
+ * @title  USBC
+ * @notice USBC Proxy Cobtract
+ * @dev    This is a Diamond Contract following EIP-2535.
+ *         To view its ABI and interact with functions,
+ *         use an EIP-2535 compatible explorer.
+ */
+contract Counter is SolidStateDiamond {}
