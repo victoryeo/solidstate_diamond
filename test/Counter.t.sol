@@ -13,13 +13,13 @@ contract CounterTest is Test {
 
     function setUp() public {
         counter = new Counter();
-        counterFacet = new CounterFacet();
-        counterFacet.setNumber(0);
+        counterFacet = new CounterFacet(100);
+        //counterFacet.setNumber(0);
     }
 
     function test_Increment() public {
         counterFacet.increment();
-        assertEq(counterFacet.getNumber() , 1);
+        assertEq(counterFacet.getNumber() , 101);
     }
 
     function testFuzz_SetNumber(uint256 x) public {
@@ -45,6 +45,9 @@ contract CounterTest is Test {
         });
 
         counter.diamondCut(facetCuts, address(0), "");
+
+        // Facet(address(diamond)).function(params);
+        console.log("Value", CounterFacet(address(counter)).getNumber());
 
         // get the facets
         IERC2535DiamondLoupeInternal.Facet[] memory facets = counter.facets();
