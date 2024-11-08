@@ -5,6 +5,9 @@ import "./CounterStorage.sol";
 import "./CounterInternal.sol";
 
 contract CounterFacet is CounterInternal {
+    constructor (uint256 value) {
+        CounterStorage.layout().number = value;
+    }
 
     function setNumber(uint256 newNumber) public {
         CounterStorage.layout().number = newNumber;
