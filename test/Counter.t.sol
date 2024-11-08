@@ -27,7 +27,7 @@ contract CounterTest is Test {
         assertEq(counterFacet.getNumber(), x);
     }
 
-    function test_upgrade() public {
+    function test_upgrade_facet() public {
         IERC2535DiamondCutInternal.FacetCut[] memory facetCuts = new IERC2535DiamondCutInternal.FacetCut[](1);
         bytes4[] memory selectors = new bytes4[](2);
         uint256 selectorIndex;
@@ -44,7 +44,10 @@ contract CounterTest is Test {
             selectors: selectors
         });
 
-        counter.diamondCut(facetCuts, address(0), "");
+        // encode function call to send to the contract at _init
+        bytes memory thecalldata = abi.encodeWithSelector(CounterFacet.initialize.selector, 100);
+
+        counter.diamondCut(facetCuts, address(counterFacet), thecalldata);
 
         // Facet(address(diamond)).function(params);
         console.log("Value", CounterFacet(address(counter)).getNumber());
@@ -52,8 +55,8 @@ contract CounterTest is Test {
         // get the facets
         IERC2535DiamondLoupeInternal.Facet[] memory facets = counter.facets();
 
-        console.log(facets.length, facets[1].target);
-        console.log(facets[1].selectors.length);
+        console.log(facets.length, facets[0].target, facets[1].target);
+        console.log(facets[0].selectors.length, facets[1].selectors.length);
         console.logBytes4(facets[1].selectors[0]);
 
         // call setNumber at selectors[1]
@@ -66,4 +69,36 @@ contract CounterTest is Test {
         console.logBytes(res);
         assertEq(ok, true);
     }
+
+    function test_upgrade_casting() public {
+        IERC2535DiamondCutInternal.FacetCut[] memory facetCuts = new IERC2535DiamondCutInternal.FacetCut[](1);
+        bytes4[] memory selectors = new bytes4[](2);
+        uint256 selectorIndex;
+
+        // register a new function
+        selectors[selectorIndex++] = CounterFacet.getNumber.selector;
+        // register another new function
+        selectors[selectorIndex++] = CounterFacet.setNumber.selector;
+
+        // diamond cut
+        facetCuts[0] = IERC2535DiamondCutInternal.FacetCut({
+            target: address(counterFacet),
+            action: IERC2535DiamondCutInternal.FacetCutAction.ADD,
+            selectors: selectors
+        });
+
+        // encode function call to send to the contract at _init
+        bytes memory thecalldata = abi.encodeWithSelector(CounterFacet.initialize.selector, 100);
+
+        counter.diamondCut(facetCuts, address(counterFacet), thecalldata);
+
+        // Facet(address(diamond)).function(params);
+        console.log("Value", CounterFacet(address(counter)).getNumber());
+
+        CounterFacet(address(counter)).setNumber(10);
+
+        console.log("Value", CounterFacet(address(counter)).getNumber());
+        assertEq(CounterFacet(address(counter)).getNumber(), 10);
+    }
+
 }

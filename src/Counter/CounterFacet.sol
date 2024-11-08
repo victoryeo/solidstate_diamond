@@ -9,6 +9,10 @@ contract CounterFacet is CounterInternal {
         CounterStorage.layout().number = value;
     }
 
+    function initialize (uint256 value) public {
+        CounterStorage.layout().number = value;
+    }
+
     function setNumber(uint256 newNumber) public {
         CounterStorage.layout().number = newNumber;
         _setNumber(newNumber);
