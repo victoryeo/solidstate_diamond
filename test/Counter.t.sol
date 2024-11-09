@@ -14,7 +14,6 @@ contract CounterTest is Test {
     function setUp() public {
         counter = new Counter();
         counterFacet = new CounterFacet(100);
-        //counterFacet.setNumber(0);
     }
 
     function test_Increment() public {
@@ -27,7 +26,7 @@ contract CounterTest is Test {
         assertEq(counterFacet.getNumber(), x);
     }
 
-    function test_upgrade_facet() public {
+    function test_upgrade_selector() public {
         IERC2535DiamondCutInternal.FacetCut[] memory facetCuts = new IERC2535DiamondCutInternal.FacetCut[](1);
         bytes4[] memory selectors = new bytes4[](2);
         uint256 selectorIndex;
@@ -58,6 +57,7 @@ contract CounterTest is Test {
         console.log(facets.length, facets[0].target, facets[1].target);
         console.log(facets[0].selectors.length, facets[1].selectors.length);
         console.logBytes4(facets[1].selectors[0]);
+        console.logBytes4(CounterFacet.getNumber.selector);
 
         // call setNumber at selectors[1]
         (bool ok1, bytes memory res1) = address(facets[1].target).call(abi.encodeWithSelector(facets[1].selectors[1], uint256(2)));
@@ -92,9 +92,10 @@ contract CounterTest is Test {
 
         counter.diamondCut(facetCuts, address(counterFacet), thecalldata);
 
-        // Facet(address(diamond)).function(params);
+        // call Facet(address(diamond)).function(params);
         console.log("Value", CounterFacet(address(counter)).getNumber());
 
+        // call Facet(address(diamond)).function(params);
         CounterFacet(address(counter)).setNumber(10);
 
         console.log("Value", CounterFacet(address(counter)).getNumber());
