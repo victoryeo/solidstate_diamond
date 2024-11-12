@@ -18,7 +18,7 @@ contract CounterTest is Test {
 
     function test_Increment() public {
         counterFacet.increment();
-        assertEq(counterFacet.getNumber() , 101);
+        assertEq(counterFacet.getNumber(), 101);
     }
 
     function testFuzz_SetNumber(uint256 x) public {
@@ -60,12 +60,13 @@ contract CounterTest is Test {
         console.logBytes4(CounterFacet.getNumber.selector);
 
         // call setNumber at selectors[1]
-        (bool ok1, bytes memory res1) = address(facets[1].target).call(abi.encodeWithSelector(facets[1].selectors[1], uint256(2)));
+        (bool ok1, bytes memory res1) =
+            address(facets[1].target).call(abi.encodeWithSelector(facets[1].selectors[1], uint256(2)));
         console.logBytes(res1);
         assertEq(ok1, true);
-        
+
         // call getNumber at selectors[0]
-        (bool ok, bytes memory res) = address(facets[1].target).call(abi.encodeWithSelector(facets[1].selectors[0])); 
+        (bool ok, bytes memory res) = address(facets[1].target).call(abi.encodeWithSelector(facets[1].selectors[0]));
         console.logBytes(res);
         assertEq(ok, true);
     }
@@ -101,5 +102,4 @@ contract CounterTest is Test {
         console.log("Value", CounterFacet(address(counter)).getNumber());
         assertEq(CounterFacet(address(counter)).getNumber(), 10);
     }
-
 }

@@ -8,10 +8,10 @@ contract CounterInternal {
     event NewValue(uint256 value);
 
     function _setNumber(uint256 newNumber) internal {
-      emit NewValue(newNumber);
+        emit NewValue(newNumber);
     }
 
     function _getNumber() internal view returns (uint256 number) {
-      return CounterStorage.layout().number;
+        return CounterStorage.layout().number;
     }
 }

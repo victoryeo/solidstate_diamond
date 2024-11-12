@@ -5,11 +5,11 @@ import "./CounterStorage.sol";
 import "./CounterInternal.sol";
 
 contract CounterFacet is CounterInternal {
-    constructor (uint256 value) {
+    constructor(uint256 value) {
         CounterStorage.layout().number = value;
     }
 
-    function initialize (uint256 value) public {
+    function initialize(uint256 value) public {
         CounterStorage.layout().number = value;
     }
 
@@ -23,6 +23,6 @@ contract CounterFacet is CounterInternal {
     }
 
     function getNumber() public view returns (uint256 number) {
-      return _getNumber();
+        return _getNumber();
     }
 }
